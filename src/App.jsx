@@ -7,6 +7,13 @@ import UploadField from './components/UploadField'
 import { stickerSections } from './constants/galleryImages'
 import './App.css'
 
+const showcaseImages = Object.values(
+  import.meta.glob('./assets/showcase/*.{png,jpg,jpeg,webp,avif}', {
+    eager: true,
+    import: 'default',
+  }),
+)
+
 function App() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState('')
   const [backgroundImageUrl, setBackgroundImageUrl] = useState('')
@@ -134,6 +141,15 @@ function App() {
             </div>
           </div>
         </div>
+
+        <section className="showcase" aria-label="Sample creations">
+          <h2>Made with Pixly</h2>
+          <div className="showcase-grid">
+            {showcaseImages.map((imageUrl) => (
+              <img key={imageUrl} src={imageUrl} alt="Pixly sample result" loading="lazy" />
+            ))}
+          </div>
+        </section>
       </section>
     </main>
   )

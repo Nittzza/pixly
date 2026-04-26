@@ -212,3 +212,31 @@
   border-color: #f87171;
   color: #fecaca;
 }
+
+.showcase {
+  border-top: 1px solid #2b3347;
+  padding-top: 12px;
+}
+
+.showcase h2 {
+  margin: 0 0 10px;
+  color: #e2e8f0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.showcase-grid img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #334155;
+}
