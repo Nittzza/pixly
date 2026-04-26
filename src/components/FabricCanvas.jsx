@@ -50,7 +50,9 @@ function FabricCanvas({
       width: 340,
       height: 460,
       backgroundColor: '#0b1020',
-      selection: true,
+      selection: false,
+      selectionColor: 'rgba(0, 0, 0, 0)',
+      selectionBorderColor: 'rgba(0, 0, 0, 0)',
     })
 
     const notifySelectionOpacity = () => {
@@ -396,7 +398,7 @@ function FabricCanvas({
         evented: true,
         hasControls: true,
         lockUniScaling: true,
-        lockRotation: true,
+        lockRotation: false,
         lockSkewingX: true,
         lockSkewingY: true,
         isSticker: true,
@@ -406,7 +408,7 @@ function FabricCanvas({
         mb: false,
         ml: false,
         mr: false,
-        mtr: false,
+        mtr: true,
       })
 
       canvas.add(image)
