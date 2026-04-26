@@ -15,6 +15,7 @@ function App() {
   const [selectedObjectOpacity, setSelectedObjectOpacity] = useState(null)
   const [opacitySliderValue, setOpacitySliderValue] = useState(60)
   const [binState, setBinState] = useState({ visible: false, overBin: false })
+  const [downloadToken, setDownloadToken] = useState(0)
 
   useEffect(() => {
     return () => {
@@ -78,6 +79,10 @@ function App() {
     setBinState(nextState)
   }, [])
 
+  const handleDownload = useCallback(() => {
+    setDownloadToken((value) => value + 1)
+  }, [])
+
   return (
     <main className="editor-page">
       <section className="editor-phone">
@@ -86,6 +91,9 @@ function App() {
         <UploadField onImageUpload={handleImageUpload} />
 
         <div className="toolbar">
+          <button type="button" className="tool-button" onClick={handleDownload}>
+            Download Image
+          </button>
           <button
             type="button"
             className="tool-button"
@@ -115,6 +123,7 @@ function App() {
               selectedObjectOpacity={opacitySliderValue / 100}
               onSelectionOpacityChange={handleSelectionOpacityChange}
               onStickerDragStateChange={handleStickerDragStateChange}
+              downloadToken={downloadToken}
             />
             <div
               className={`trash-bin ${binState.visible ? 'is-visible' : ''} ${

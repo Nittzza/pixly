@@ -23,6 +23,7 @@ function FabricCanvas({
   selectedObjectOpacity,
   onSelectionOpacityChange,
   onStickerDragStateChange,
+  downloadToken,
 }) {
   const canvasElementRef = useRef(null)
   const fabricCanvasRef = useRef(null)
@@ -436,6 +437,31 @@ function FabricCanvas({
     activeObject.set('opacity', selectedObjectOpacity)
     canvas.requestRenderAll()
   }, [selectedObjectOpacity])
+
+  useEffect(() => {
+    if (!downloadToken) {
+      return
+    }
+
+    const canvas = fabricCanvasRef.current
+    if (!canvas) {
+      return
+    }
+
+    canvas.discardActiveObject()
+    canvas.requestRenderAll()
+
+    const dataUrl = canvas.toDataURL({
+      format: 'png',
+      quality: 1,
+      multiplier: 2,
+    })
+
+    const downloadLink = document.createElement('a')
+    downloadLink.href = dataUrl
+    downloadLink.download = `pixly-${Date.now()}.png`
+    downloadLink.click()
+  }, [downloadToken])
 
   return <canvas ref={canvasElementRef} />
 }
