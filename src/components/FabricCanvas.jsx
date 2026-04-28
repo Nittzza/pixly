@@ -7,6 +7,22 @@ const getTouchDistance = (touchA, touchB) => {
   return Math.hypot(deltaX, deltaY)
 }
 
+const getTouchAngle = (touchA, touchB) => {
+  const deltaX = touchB.clientX - touchA.clientX
+  const deltaY = touchB.clientY - touchA.clientY
+  return (Math.atan2(deltaY, deltaX) * 180) / Math.PI
+}
+
+const normalizeAngleDelta = (angleDelta) => {
+  if (angleDelta > 180) {
+    return angleDelta - 360
+  }
+  if (angleDelta < -180) {
+    return angleDelta + 360
+  }
+  return angleDelta
+}
+
 const getImageDimensions = (imageObject) => {
   const element = imageObject.getElement?.()
   return {
@@ -30,7 +46,17 @@ function FabricCanvas({
   const backgroundImageRef = useRef(null)
   const onSelectionOpacityChangeRef = useRef(onSelectionOpacityChange)
   const onStickerDragStateChangeRef = useRef(onStickerDragStateChange)
-  const pinchStateRef = useRef({ active: false, startDistance: 0, startScale: 1 })
+  const pinchStateRef = useRef({
+    active: false,
+    mode: 'background',
+    targetObject: null,
+    startDistance: 0,
+    startScale: 1,
+    startScaleX: 1,
+    startScaleY: 1,
+    startTouchAngle: 0,
+    startObjectAngle: 0,
+  })
   const draggingStickerRef = useRef(null)
   const overBinRef = useRef(false)
 
@@ -181,16 +207,38 @@ function FabricCanvas({
         return
       }
 
+      const [touchA, touchB] = event.touches
+      const activeObject = canvas.getActiveObject()
+      if (activeObject?.isSticker) {
+        pinchStateRef.current = {
+          active: true,
+          mode: 'sticker',
+          targetObject: activeObject,
+          startDistance: getTouchDistance(touchA, touchB),
+          startScale: 1,
+          startScaleX: activeObject.scaleX || 1,
+          startScaleY: activeObject.scaleY || 1,
+          startTouchAngle: getTouchAngle(touchA, touchB),
+          startObjectAngle: activeObject.angle || 0,
+        }
+        return
+      }
+
       const mainImage = backgroundImageRef.current
       if (!mainImage) {
         return
       }
 
-      const [touchA, touchB] = event.touches
       pinchStateRef.current = {
         active: true,
+        mode: 'background',
+        targetObject: null,
         startDistance: getTouchDistance(touchA, touchB),
         startScale: mainImage.scaleX || 1,
+        startScaleX: 1,
+        startScaleY: 1,
+        startTouchAngle: 0,
+        startObjectAngle: 0,
       }
     }
 
@@ -199,16 +247,41 @@ function FabricCanvas({
         return
       }
 
-      const mainImage = backgroundImageRef.current
-      if (!mainImage) {
-        return
-      }
-
       event.preventDefault()
 
       const [touchA, touchB] = event.touches
       const currentDistance = getTouchDistance(touchA, touchB)
       const distanceRatio = currentDistance / (pinchStateRef.current.startDistance || 1)
+      if (pinchStateRef.current.mode === 'sticker') {
+        const activeSticker = pinchStateRef.current.targetObject
+        if (!activeSticker || !activeSticker.isSticker) {
+          return
+        }
+
+        const nextScaleX = pinchStateRef.current.startScaleX * distanceRatio
+        const nextScaleY = pinchStateRef.current.startScaleY * distanceRatio
+        const clampedScaleX = Math.max(0.08, Math.min(nextScaleX, 8))
+        const clampedScaleY = Math.max(0.08, Math.min(nextScaleY, 8))
+        const currentTouchAngle = getTouchAngle(touchA, touchB)
+        const touchAngleDelta = normalizeAngleDelta(
+          currentTouchAngle - pinchStateRef.current.startTouchAngle,
+        )
+
+        activeSticker.set({
+          scaleX: clampedScaleX,
+          scaleY: clampedScaleY,
+          angle: pinchStateRef.current.startObjectAngle + touchAngleDelta,
+        })
+        activeSticker.setCoords()
+        canvas.requestRenderAll()
+        return
+      }
+
+      const mainImage = backgroundImageRef.current
+      if (!mainImage) {
+        return
+      }
+
       const nextScale = pinchStateRef.current.startScale * distanceRatio
       const baseScale = mainImage.baseScale || 1
       const clampedScale = Math.max(baseScale, Math.min(nextScale, baseScale * 4))
@@ -217,8 +290,12 @@ function FabricCanvas({
       canvas.requestRenderAll()
     }
 
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (event) => {
+      if (event.touches.length >= 2) {
+        return
+      }
       pinchStateRef.current.active = false
+      pinchStateRef.current.targetObject = null
     }
 
     const canvasTouchLayer = canvas.upperCanvasEl
