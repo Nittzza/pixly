@@ -474,19 +474,13 @@ function FabricCanvas({
         opacity: 0.6,
         selectable: true,
         evented: true,
-        hasControls: true,
+        hasControls: false,
+        hasBorders: false,
         lockUniScaling: true,
         lockRotation: false,
         lockSkewingX: true,
         lockSkewingY: true,
         isSticker: true,
-      })
-      image.setControlsVisibility({
-        mt: false,
-        mb: false,
-        ml: false,
-        mr: false,
-        mtr: true,
       })
 
       canvas.add(image)
