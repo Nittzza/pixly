@@ -123,6 +123,9 @@ function FabricCanvas({
       if (!target?.isSticker) {
         return
       }
+      if (pinchStateRef.current.active && pinchStateRef.current.mode === 'sticker') {
+        return
+      }
 
       draggingStickerRef.current = target
       if (!target.dragStartScaleX || !target.dragStartScaleY) {
@@ -148,6 +151,13 @@ function FabricCanvas({
     }
 
     const handlePointerUp = () => {
+      if (pinchStateRef.current.active && pinchStateRef.current.mode === 'sticker') {
+        draggingStickerRef.current = null
+        overBinRef.current = false
+        onStickerDragStateChangeRef.current?.({ visible: false, overBin: false })
+        return
+      }
+
       const draggedSticker = draggingStickerRef.current
       if (!draggedSticker) {
         onStickerDragStateChangeRef.current?.({ visible: false, overBin: false })
