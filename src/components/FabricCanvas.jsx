@@ -13,6 +13,11 @@ const getTouchAngle = (touchA, touchB) => {
   return (Math.atan2(deltaY, deltaX) * 180) / Math.PI
 }
 
+const getTouchMidpoint = (touchA, touchB) => ({
+  clientX: (touchA.clientX + touchB.clientX) / 2,
+  clientY: (touchA.clientY + touchB.clientY) / 2,
+})
+
 const normalizeAngleDelta = (angleDelta) => {
   if (angleDelta > 180) {
     return angleDelta - 360
@@ -202,6 +207,41 @@ function FabricCanvas({
       return undefined
     }
 
+    canvas.upperCanvasEl.style.touchAction = 'none'
+    canvas.lowerCanvasEl.style.touchAction = 'none'
+
+    const findStickerAtTouches = (touchA, touchB) => {
+      const bounds = canvas.upperCanvasEl.getBoundingClientRect()
+      if (!bounds.width || !bounds.height) {
+        return null
+      }
+
+      const midpoint = getTouchMidpoint(touchA, touchB)
+      const canvasX = ((midpoint.clientX - bounds.left) * canvas.getWidth()) / bounds.width
+      const canvasY = ((midpoint.clientY - bounds.top) * canvas.getHeight()) / bounds.height
+
+      const objects = canvas.getObjects()
+      for (let index = objects.length - 1; index >= 0; index -= 1) {
+        const object = objects[index]
+        if (!object?.isSticker) {
+          continue
+        }
+
+        const objectBounds = object.getBoundingRect()
+        const isInsideBounds =
+          canvasX >= objectBounds.left &&
+          canvasX <= objectBounds.left + objectBounds.width &&
+          canvasY >= objectBounds.top &&
+          canvasY <= objectBounds.top + objectBounds.height
+
+        if (isInsideBounds) {
+          return object
+        }
+      }
+
+      return null
+    }
+
     const handleTouchStart = (event) => {
       if (event.touches.length !== 2) {
         return
@@ -209,17 +249,22 @@ function FabricCanvas({
 
       const [touchA, touchB] = event.touches
       const activeObject = canvas.getActiveObject()
-      if (activeObject?.isSticker) {
+      const stickerTarget =
+        (activeObject?.isSticker && activeObject) || findStickerAtTouches(touchA, touchB)
+
+      if (stickerTarget) {
+        event.preventDefault()
+        canvas.setActiveObject(stickerTarget)
         pinchStateRef.current = {
           active: true,
           mode: 'sticker',
-          targetObject: activeObject,
+          targetObject: stickerTarget,
           startDistance: getTouchDistance(touchA, touchB),
           startScale: 1,
-          startScaleX: activeObject.scaleX || 1,
-          startScaleY: activeObject.scaleY || 1,
+          startScaleX: stickerTarget.scaleX || 1,
+          startScaleY: stickerTarget.scaleY || 1,
           startTouchAngle: getTouchAngle(touchA, touchB),
-          startObjectAngle: activeObject.angle || 0,
+          startObjectAngle: stickerTarget.angle || 0,
         }
         return
       }
@@ -299,7 +344,7 @@ function FabricCanvas({
     }
 
     const canvasTouchLayer = canvas.upperCanvasEl
-    canvasTouchLayer.addEventListener('touchstart', handleTouchStart, { passive: true })
+    canvasTouchLayer.addEventListener('touchstart', handleTouchStart, { passive: false })
     canvasTouchLayer.addEventListener('touchmove', handleTouchMove, { passive: false })
     canvasTouchLayer.addEventListener('touchend', handleTouchEnd)
     canvasTouchLayer.addEventListener('touchcancel', handleTouchEnd)
