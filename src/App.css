@@ -5,30 +5,31 @@
   justify-content: center;
   padding: 28px 16px;
   box-sizing: border-box;
+  background: radial-gradient(circle at top, #ffe4f1 0%, #ffd3e8 42%, #fbc3df 100%);
 }
 
 .editor-phone {
   width: min(100%, 410px);
-  background: #111522;
-  border: 1px solid #262d42;
+  background: #fff4fb;
+  border: 1px solid #f4bddb;
   border-radius: 24px;
   padding: 18px 14px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-shadow: 0 18px 36px rgba(3, 6, 14, 0.45);
+  box-shadow: 0 18px 36px rgba(189, 93, 143, 0.24);
 }
 
 .editor-header h1 {
   margin: 0;
-  color: #f8fafc;
+  color: #9d245f;
   font-size: 1.15rem;
   font-weight: 600;
 }
 
 .editor-header p {
   margin: 3px 0 0;
-  color: #94a3b8;
+  color: #b05d89;
   font-size: 0.82rem;
 }
 
@@ -40,16 +41,16 @@
 }
 
 .upload-field span {
-  color: #e5e7eb;
+  color: #9d245f;
   font-size: 0.85rem;
   font-weight: 500;
 }
 
 .upload-field input[type='file'] {
   width: 100%;
-  color: #dbeafe;
-  background: #0b1020;
-  border: 1px solid #2e3650;
+  color: #8f2962;
+  background: #fff;
+  border: 1px solid #f2bedb;
   border-radius: 12px;
   padding: 9px;
   box-sizing: border-box;
@@ -62,9 +63,9 @@
 }
 
 .tool-button {
-  border: 1px solid #334155;
-  background: #111827;
-  color: #e5e7eb;
+  border: 1px solid #e9a5cb;
+  background: linear-gradient(180deg, #ff9dcd 0%, #f57fb8 100%);
+  color: #fff;
   border-radius: 10px;
   padding: 9px 10px;
   font-size: 0.8rem;
@@ -72,7 +73,7 @@
 }
 
 .tool-button:hover {
-  border-color: #64748b;
+  border-color: #dd6ea8;
 }
 
 .tool-button:disabled {
@@ -88,7 +89,7 @@
 }
 
 .opacity-field span {
-  color: #e5e7eb;
+  color: #9d245f;
   font-size: 0.85rem;
   font-weight: 500;
 }
@@ -98,7 +99,7 @@
 }
 
 .opacity-field small {
-  color: #98a2b3;
+  color: #b05d89;
   font-size: 0.75rem;
 }
 
@@ -117,12 +118,12 @@
   gap: 12px;
   padding-right: 3px;
   scrollbar-width: thin;
-  scrollbar-color: #475569 transparent;
+  scrollbar-color: #e49cc3 transparent;
 }
 
 .thumb-section h3 {
   margin: 0 0 6px;
-  color: #cbd5e1;
+  color: #b74f86;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.03em;
@@ -140,13 +141,13 @@
 }
 
 .thumb-panel::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: #e49cc3;
   border-radius: 999px;
 }
 
 .thumb-button {
-  border: 1px solid #2f3852;
-  background: #0b1020;
+  border: 1px solid #f2bedb;
+  background: #fff;
   padding: 0;
   border-radius: 10px;
   overflow: hidden;
@@ -156,22 +157,22 @@
 
 .thumb-button:hover {
   transform: translateY(-1px);
-  border-color: #64748b;
+  border-color: #df7fb0;
 }
 
 .thumb-button img {
   width: 100%;
   height: 68px;
   object-fit: contain;
-  background: #0b1020;
+  background: #fff8fd;
   display: block;
   padding: 3px;
   box-sizing: border-box;
 }
 
 .thumb-button.is-active {
-  border-color: #818cf8;
-  box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.28);
+  border-color: #ea6daa;
+  box-shadow: 0 0 0 2px rgba(234, 109, 170, 0.24);
 }
 
 .canvas-wrap {
@@ -180,10 +181,10 @@
   justify-content: center;
   align-items: center;
   flex: 1;
-  border: 1px solid #2f3852;
+  border: 1px solid #f2bedb;
   border-radius: 14px;
   overflow: hidden;
-  background: #0b1020;
+  background: #fff8fd;
   padding: 0;
 }
 
@@ -192,9 +193,9 @@
   bottom: 10px;
   left: 50%;
   transform: translate(-50%, 14px) scale(0.95);
-  background: rgba(2, 6, 23, 0.88);
-  border: 1px solid rgba(148, 163, 184, 0.42);
-  color: #e2e8f0;
+  background: rgba(255, 228, 241, 0.92);
+  border: 1px solid rgba(216, 102, 157, 0.5);
+  color: #9d245f;
   font-size: 0.74rem;
   border-radius: 999px;
   padding: 7px 14px;
@@ -209,18 +210,18 @@
 }
 
 .trash-bin.is-over {
-  border-color: #f87171;
-  color: #fecaca;
+  border-color: #e25588;
+  color: #b11f59;
 }
 
 .showcase {
-  border-top: 1px solid #2b3347;
+  border-top: 1px solid #f2bedb;
   padding-top: 12px;
 }
 
 .showcase h2 {
   margin: 0 0 10px;
-  color: #e2e8f0;
+  color: #b74f86;
   font-size: 0.88rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -238,5 +239,5 @@
   aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: 10px;
-  border: 1px solid #334155;
+  border: 1px solid #efb4d5;
 }

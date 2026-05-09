@@ -64,6 +64,7 @@ function FabricCanvas({
   })
   const draggingStickerRef = useRef(null)
   const overBinRef = useRef(false)
+  const useTouchOnlyControlsRef = useRef(false)
 
   useEffect(() => {
     onSelectionOpacityChangeRef.current = onSelectionOpacityChange
@@ -77,6 +78,9 @@ function FabricCanvas({
     if (!canvasElementRef.current) {
       return undefined
     }
+
+    useTouchOnlyControlsRef.current =
+      window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0
 
     const canvas = new Canvas(canvasElementRef.current, {
       width: 340,
@@ -529,14 +533,23 @@ function FabricCanvas({
         opacity: 0.6,
         selectable: true,
         evented: true,
-        hasControls: false,
-        hasBorders: false,
+        hasControls: !useTouchOnlyControlsRef.current,
+        hasBorders: !useTouchOnlyControlsRef.current,
         lockUniScaling: true,
         lockRotation: false,
         lockSkewingX: true,
         lockSkewingY: true,
         isSticker: true,
       })
+      if (!useTouchOnlyControlsRef.current) {
+        image.setControlsVisibility({
+          mt: false,
+          mb: false,
+          ml: false,
+          mr: false,
+          mtr: true,
+        })
+      }
 
       canvas.add(image)
       canvas.setActiveObject(image)
