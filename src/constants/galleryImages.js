@@ -28,7 +28,6 @@ const srmImages = [
 ]
 
 export const stickerSections = [
-  { id: 'srm', title: 'SRM', images: srmImages },
   { id: 'flowers', title: 'Flowers', images: flowerImages },
   { id: 'beachy', title: 'Beachy', images: beachyImages },
 ]

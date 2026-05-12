@@ -85,7 +85,7 @@ function FabricCanvas({
     const canvas = new Canvas(canvasElementRef.current, {
       width: 340,
       height: 460,
-      backgroundColor: '#0b1020',
+      backgroundColor: '#fef6fb',
       selection: false,
       selectionColor: 'rgba(0, 0, 0, 0)',
       selectionBorderColor: 'rgba(0, 0, 0, 0)',
@@ -386,7 +386,7 @@ function FabricCanvas({
       }
 
       if (!backgroundImageUrl) {
-        canvas.backgroundColor = '#0b1020'
+        canvas.backgroundColor = '#fef6fb'
         canvas.requestRenderAll()
         return
       }
